@@ -1,7 +1,9 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import VideoList from './VideoList';
 import { Video } from '../../types';
+import { VideosContext } from '../../contexts/VideosContext/VideosContext';
 
 const mockVideos: Video[] = [
   {
@@ -24,42 +26,38 @@ const mockVideos: Video[] = [
   },
 ];
 
-afterEach(() => {
-  jest.restoreAllMocks();
-});
+const defaultContextValue = {
+  videos: [] as Video[],
+  isLoading: false,
+  error: null as string | null,
+  addVideo: jest.fn(),
+};
 
-test('shows loading state initially', () => {
-  global.fetch = jest.fn(() => new Promise(() => {})) as jest.Mock;
-  render(<VideoList />);
+function renderWithContext(contextValue = defaultContextValue) {
+  return render(
+    <VideosContext.Provider value={contextValue}>
+      <VideoList />
+    </VideosContext.Provider>
+  );
+}
+
+test('shows loading state when loading', () => {
+  renderWithContext({ ...defaultContextValue, isLoading: true });
   expect(screen.getByText('Loading videos...')).toBeInTheDocument();
 });
 
-test('renders video cards after loading', async () => {
-  global.fetch = jest.fn(() =>
-    Promise.resolve({
-      ok: true,
-      json: () => Promise.resolve(mockVideos),
-    })
-  ) as jest.Mock;
-
-  render(<VideoList />);
-
-  await waitFor(() => {
-    expect(screen.getByText('First Video')).toBeInTheDocument();
-    expect(screen.getByText('Second Video')).toBeInTheDocument();
-  });
+test('renders video cards after loading', () => {
+  renderWithContext({ ...defaultContextValue, videos: mockVideos });
+  expect(screen.getByText('First Video')).toBeInTheDocument();
+  expect(screen.getByText('Second Video')).toBeInTheDocument();
 });
 
-test('shows error message on fetch failure', async () => {
-  global.fetch = jest.fn(() =>
-    Promise.resolve({
-      ok: false,
-    })
-  ) as jest.Mock;
+test('shows error message on error', () => {
+  renderWithContext({ ...defaultContextValue, error: 'Failed to fetch videos' });
+  expect(screen.getByRole('alert')).toHaveTextContent('Error');
+});
 
-  render(<VideoList />);
-
-  await waitFor(() => {
-    expect(screen.getByRole('alert')).toHaveTextContent('Error');
-  });
+test('renders sort dropdown', () => {
+  renderWithContext({ ...defaultContextValue, videos: mockVideos });
+  expect(screen.getByLabelText('Sort videos')).toBeInTheDocument();
 });
