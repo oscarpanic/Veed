@@ -1,6 +1,6 @@
 ## VEED Video App
 
-This project was boostrapped with the help of GitHub Copilot, which in turn leveraged [Create React App](https://github.com/facebook/create-react-app) for the front end. (See README in client directory for more information on this).
+This project was boostrapped with the help of GitHub Copilot, which in turn leveraged [Create React App](https://github.com/facebook/create-react-app) for the front end. (See [README](./client/README.md) in client directory for more information on this).
 
 ## Tech stack
 **Frontend:** React + Typescript
