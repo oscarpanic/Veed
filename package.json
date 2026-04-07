@@ -1,0 +1,11 @@
+{
+  "name": "veed",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:backend": "cd server && npm run dev",
+    "dev:frontend": "cd client && npm start",
+    "install:all": "npm install && cd server && npm install && cd ../client && npm install",
+    "test": "cd client && npm test"
+  }
+}
