@@ -26,6 +26,8 @@
 
 .video-meta {
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   gap: 16px;
   color: #666;
   font-size: 0.875rem;
@@ -36,6 +38,13 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+}
+
+.views {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
 }
 
 .tag {

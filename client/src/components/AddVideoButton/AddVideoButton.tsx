@@ -1,4 +1,5 @@
 
+import AddIcon from '@mui/icons-material/Add';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Fade from '@mui/material/Fade';
@@ -11,6 +12,7 @@ import './AddVideoButton.css';
 import TextField from '@mui/material/TextField';
 import { useVideosContext } from '../../hooks/useVideosContext';
 import Snackbar from '@mui/material/Snackbar';
+import { error } from 'console';
 
 const strings = {
     addVideo: "Add Video",
@@ -20,6 +22,7 @@ const strings = {
     tagsHelperText: "Separate tags with commas (e.g. comedy, music, education)",
     submitButton: "Submit",
     successMessage: "Video added successfully",
+    errorMessage: "Failed to add video",
 }
 
 export default function AddVideoButton() {
@@ -27,25 +30,35 @@ export default function AddVideoButton() {
     const [title, setTitle] = useState("");
     const [tags, setTags] = useState<string[]>([]);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState(strings.successMessage);
     
     const { addVideo } = useVideosContext();
 
+    const onSuccess = () => {
+        setOpen(false);
+        setTitle("");
+        setTags([]);
+        setSnackbarMessage(strings.successMessage);
+        setSnackbarOpen(true);
+    };
+
+    const onError = () => {
+        setOpen(false);
+        setSnackbarMessage(strings.errorMessage);
+        setSnackbarOpen(true);
+    };
 
     const onSubmit = () => {
-        addVideo(title, tags, () => {
-            setOpen(false);
-            setTitle("");
-            setTags([]);
-            setSnackbarOpen(true);
-        });
-    }
+        addVideo(title, tags, onSuccess, onError);
+    };
 
     return (
         <>
             <Button 
                 className="add-video-button" 
                 onClick={() => setOpen(true)}
-                variant='contained'>
+                variant='contained'
+                startIcon={<AddIcon />}>
                 {strings.addVideo}
             </Button>
 
@@ -80,7 +93,8 @@ export default function AddVideoButton() {
                                 helperText={strings.tagsHelperText}
                                 onChange={(e) => setTags(e.target.value.split(",").map(tag => tag.trim()))}
                             />
-                            <Button 
+                            <Button
+                                disabled={!title.trim()}
                                 variant='contained'
                                 onClick={onSubmit}
                             >
@@ -94,7 +108,7 @@ export default function AddVideoButton() {
                 open={snackbarOpen}
                 autoHideDuration={6000}
                 onClose={() => setSnackbarOpen(false)}
-                message={strings.successMessage}
+                message={snackbarMessage}
             />
         </>
     )

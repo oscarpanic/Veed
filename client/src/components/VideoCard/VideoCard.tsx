@@ -1,5 +1,6 @@
 import React from 'react';
 import { Video } from '../../types';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import './VideoCard.css';
 
 interface VideoCardProps {
@@ -13,7 +14,7 @@ function formatDuration(seconds: number): string {
 }
 
 export default function VideoCard({ video }: VideoCardProps): React.ReactElement {
-  const { thumbnail_url: thumbnailURL, title, duration, views, tags } = video;
+  const { created_at: createdAt, thumbnail_url: thumbnailURL, title, duration, views, tags } = video;
 
   return (
     <div className="video-card" data-testid={`video-card-${video.id}`}>
@@ -25,8 +26,12 @@ export default function VideoCard({ video }: VideoCardProps): React.ReactElement
       <div className="video-info">
         <h3 className="video-title">{title}</h3>
         <p className="video-meta">
+          <span className='views'>
+            <VisibilityIcon /> 
+            {views.toLocaleString()}
+          </span>
+          <span>{new Date(createdAt).toLocaleDateString()}</span>
           <span>{formatDuration(duration)}</span>
-          <span>{views.toLocaleString()} views</span>
         </p>
         <div className="video-tags">
           {tags.map((tag) => (

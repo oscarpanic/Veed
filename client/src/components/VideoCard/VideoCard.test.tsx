@@ -32,7 +32,13 @@ test('renders formatted duration', () => {
 
 test('renders view count', () => {
   render(<VideoCard video={mockVideo} />);
-  expect(screen.getByText('12,453 views')).toBeInTheDocument();
+  expect(screen.getByText('12,453')).toBeInTheDocument();
+});
+
+test('renders created date', () => {
+  render(<VideoCard video={mockVideo} />);
+  const formattedDate = new Date('2025-01-15T14:23:11Z').toLocaleDateString();
+  expect(screen.getByText(formattedDate)).toBeInTheDocument();
 });
 
 test('renders tags', () => {

@@ -211,3 +211,50 @@ test('addVideo handles creation failure gracefully', async () => {
 
   consoleSpy.mockRestore();
 });
+
+test('addVideo calls onError callback on failure', async () => {
+  const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const onError = jest.fn();
+
+  function TestConsumerWithErrorCallback() {
+    const { videos, isLoading, addVideo } = useContext(VideosContext);
+    return (
+      <div>
+        {isLoading && <p>Loading...</p>}
+        <ul>
+          {videos.map((v) => (
+            <li key={v.id}>{v.title}</li>
+          ))}
+        </ul>
+        <button onClick={() => addVideo('New Video', ['tag1'], undefined, onError)}>Add</button>
+      </div>
+    );
+  }
+
+  global.fetch = jest.fn()
+    .mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve(mockVideos),
+    })
+    .mockResolvedValueOnce({
+      ok: false,
+    }) as jest.Mock;
+
+  render(
+    <VideosContextProvider>
+      <TestConsumerWithErrorCallback />
+    </VideosContextProvider>
+  );
+
+  await waitFor(() => {
+    expect(screen.getByText('Test Video')).toBeInTheDocument();
+  });
+
+  await userEvent.click(screen.getByText('Add'));
+
+  await waitFor(() => {
+    expect(onError).toHaveBeenCalledTimes(1);
+  });
+
+  consoleSpy.mockRestore();
+});

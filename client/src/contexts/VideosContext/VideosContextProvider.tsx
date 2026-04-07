@@ -36,7 +36,7 @@ export function VideosContextProvider({children}: IVideosContextProvider) {
             fetchData();
         }, []);
 
-    const addVideo = useCallback(async (title: string, tags: string[], onSuccess?: () => void) => {    
+    const addVideo = useCallback(async (title: string, tags: string[], onSuccess?: () => void, onError?: () => void) => {    
         try{
             const newVideo = await createVideo({
                 title,
@@ -50,6 +50,9 @@ export function VideosContextProvider({children}: IVideosContextProvider) {
             setVideos((prevVideos) => [...prevVideos, newVideo]);
         } catch (err) {
             console.error("Failed to create video:", err);
+            if (onError) {
+                onError();
+            }
             return;
         } finally {
             if (onSuccess) {

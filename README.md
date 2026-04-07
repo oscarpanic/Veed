@@ -6,7 +6,7 @@ This project was boostrapped with the help of GitHub Copilot, which in turn leve
 **Frontend:** React + Typescript
 **Backend:** Node.js
 **Testing:** Jest + React Testing Library
-**Additional libraries/dependancies:** Material UI
+**Additional libraries/dependancies:** Material UI, Material Icons
 
 ## Running the project:
 
