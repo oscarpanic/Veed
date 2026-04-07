@@ -28,4 +28,5 @@ Used Github Copilot mainly for bootstrapping the app. Additional usage of GitHub
 See [PROMPTS.md](PROMPTS.md) for more full conversation logs.
 
 ** Reflections on AI usage **
-AI is an extremely useful tool to help boostrap a project and getting straight to business. However, it is also prone to either do more or do less than you required/expected. In this case, I had to redo and undo several parts of the code it generated, as I ran into small issues with the setup (which were trivial to solve leveragint the Copilot once more) and with the project structure (which I addressed manually). 
+AI is an extremely useful tool to help boostrap a project and getting straight to business. However, it is also prone to either do more or do less than you required/expected. In this case, I had to redo and undo several parts of the code it generated, as I ran into small issues with the setup (which were trivial to solve leveraging the Copilot once more, as can be seen in the prompts log) and with the project structure (which I addressed manually). 
+The main thing that surprised me was that it pregenerated VideoList and VideoCard components for me, which I did not intend. I heavily changed them in any case and moved them to different directories.
