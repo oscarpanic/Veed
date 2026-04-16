@@ -63,3 +63,32 @@ A record of AI-assisted development conversations for this project.
 **Prompt:** I want to include a file with a record of the Copilot conversations I have had on this project.
 
 **Response:** Created this `PROMPTS.md` file at the project root.
+
+---
+
+## Session 2 — Auto-Generate Tags with Gemini AI (April 15, 2026)
+
+### 1. Add tag generation API, client function, and hook
+
+**Prompt:** I will add some functionality to auto generate tags to prefill the form used for video creation. Let's create an API call to the backend that receives this video title and returns an array of 3 tags. I will call this from a hook that will be called by AddVideoButton.
+
+**Response:** Added three layers:
+- **Backend route** — `POST /api/videos/generate-tags` in `server/src/routes/videos.ts`, placed before `/:id` routes to avoid Express param conflicts. Takes `{ title }` in the body and returns `{ tags: string[] }`.
+- **Client API function** — `generateTags(title)` in `client/src/api/videosApi.ts`, calls the new endpoint and returns `string[]`.
+- **Hook** — `useGenerateTags()` in `client/src/hooks/useGenerateTags.ts`, exposes `{ tags, isLoading, error, generate }` for use in `AddVideoButton`.
+
+---
+
+### 2. Install @google/genai
+
+**Prompt:** Install @google/genai on the server app directory.
+
+**Response:** Ran `npm install @google/genai` inside `server/`, adding the Google Generative AI SDK as a dependency.
+
+---
+
+### 3. Use Gemini response for tag generation
+
+**Prompt:** Use the response from line 35 to get the 3 tags we want to return.
+
+**Response:** Updated the `generate-tags` route to parse the Gemini `generateContent` response. Replaced the old static tag-pool logic (which referenced an undefined `words` variable) with: split `response.text` by commas, trim/lowercase each tag, and return up to 3 tags.

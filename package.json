@@ -7,5 +7,10 @@
     "dev:frontend": "cd client && npm start",
     "install:all": "npm install && cd server && npm install && cd ../client && npm install",
     "test": "cd client && npm test"
+  },
+  "dependencies": {
+    "@google/genai": "^1.50.1",
+    "install": "^0.13.0",
+    "npm": "^11.12.1"
   }
 }

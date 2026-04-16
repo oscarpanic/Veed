@@ -41,3 +41,14 @@ export async function deleteVideo(id: string): Promise<Video> {
   if (!res.ok) throw new Error('Failed to delete video');
   return res.json();
 }
+
+export async function generateTags(title: string): Promise<string[]> {
+  const res = await fetch(`${API_BASE}/generate-tags`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title }),
+  });
+  if (!res.ok) throw new Error('Failed to generate tags');
+  const data = await res.json();
+  return data.tags;
+}

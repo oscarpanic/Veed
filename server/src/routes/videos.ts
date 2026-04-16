@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import fs from 'fs';
 import path from 'path';
 import { Video, VideosData } from '../types';
+import { GoogleGenAI } from "@google/genai";
 
 const router = Router();
 const dataPath = path.join(__dirname, '..', '..', 'data', 'videos.json');
@@ -19,6 +20,27 @@ function writeVideos(data: VideosData): void {
 router.get('/', (_req: Request, res: Response) => {
   const data = readVideos();
   res.json(data.videos);
+});
+
+// GET /api/videos/generate-tags - generate tags from a title
+router.get('/generate-tags', async (req: Request, res: Response) => {
+  const { title } = req.query;
+  if (!title || typeof title !== 'string') {
+    res.status(400).json({ error: 'Title is required' });
+    return;
+  }
+
+  const ai = new GoogleGenAI({});
+
+  const response = await ai.models.generateContent({
+    model: "gemini-3-flash-preview",
+    contents: `Generate exactly 3 relevant tags for a video with the title: "${title}". Return only the 3 tags separated by commas, nothing else.`,
+  });
+
+  const text = response.text ?? '';
+  const tags = text.split(',').map(tag => tag.trim().toLowerCase()).filter(Boolean).slice(0, 3);
+
+  res.json({ tags });
 });
 
 // GET /api/videos/:id - get a single video

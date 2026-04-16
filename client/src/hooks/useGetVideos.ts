@@ -1,6 +1,5 @@
-import { use, useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { SortOption, Video } from "../types";
-import { fetchVideos } from "../api/videosApi";
 import { useVideosContext } from "./useVideosContext";
 
 interface UseGetVideosResult {
